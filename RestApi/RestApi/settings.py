@@ -76,7 +76,7 @@ WSGI_APPLICATION = 'RestApi.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
         'NAME': 'treatbox',
         'USER': 'root',
         'PASSWORD': '1234',
