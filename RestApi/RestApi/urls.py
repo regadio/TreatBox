@@ -22,5 +22,6 @@ from django.urls import path
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('sessions/', views.sessions_view, name='sessions'),
+    path('register/', views.register, name='register'),
 
 ]
