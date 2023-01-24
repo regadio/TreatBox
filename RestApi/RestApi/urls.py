@@ -22,6 +22,10 @@ from django.urls import path
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('sessions/', views.sessions_view, name='sessions'),
+<<<<<<< HEAD
     path('peliculas/<int:id_solicitado>', views.film_detail_view, name='detail_view'),
+=======
+    path('register/', views.register, name='register'),
+>>>>>>> c1df2afb9469739bd3f33cb8542155f9d3b0ece2
 
 ]
