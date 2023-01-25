@@ -21,7 +21,7 @@ from django.urls import path
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('sessions/', views.sessions_view, name='sessions'),
+    path('login/', views.start_session_view, name='login'),
     path('peliculas/<int:id_solicitado>', views.film_detail_view, name='detail_view'),
     path('register/', views.register, name='register'),
 
