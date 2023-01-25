@@ -1,12 +1,8 @@
 import json
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
-<<<<<<< HEAD
-from .models import MovieUser
-=======
 from django.shortcuts import render, redirect
 from .models import *
->>>>>>> c1df2afb9469739bd3f33cb8542155f9d3b0ece2
 # Create your views here.
 
 #Crear vista de /sessions
@@ -33,7 +29,6 @@ def authenticate_user(username, password):
 def generate_session_token():
     return "ASDFASDFASDFLASKDF"
 
-<<<<<<< HEAD
 #Crear vista de /films
 def film_detail_view(request, id_solicitado):
     if request.method == 'GET':
@@ -48,8 +43,6 @@ def film_detail_view(request, id_solicitado):
         }
         return JsonResponse(resultado, json_dumps_params={'ensure_ascii':False})
     
-
-=======
 
 #Crear vista de /users
 @csrf_exempt
@@ -85,4 +78,3 @@ def register(request):
         return JsonResponse({'OK': 'El usuario registrado'}, status=200)
 
     return HttpResponse(status=405)
->>>>>>> c1df2afb9469739bd3f33cb8542155f9d3b0ece2
