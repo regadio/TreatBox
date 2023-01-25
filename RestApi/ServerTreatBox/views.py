@@ -44,7 +44,7 @@ def film_detail_view(request, id_solicitado):
         return JsonResponse(resultado, json_dumps_params={'ensure_ascii':False})
     
 
-#Crear vista de /users
+#Crear vista de /register
 @csrf_exempt
 def register(request):
     if request.method == 'POST':
