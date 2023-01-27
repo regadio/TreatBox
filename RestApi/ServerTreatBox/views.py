@@ -3,30 +3,34 @@ from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render, redirect
 from .models import *
+import random
 # Create your views here.
 
-#Crear vista de /sessions
-def start_session_view (request):
+#Crear vista de /login
+@csrf_exempt
+def start_session_view(request):
     if request.method == 'POST':
-        data = json.loads(request.data)
+        data = json.loads(request.body)
         username = data.get('username')
         password = data.get('password')
-
-        if Userr.objects.filter(nickname=username).exists() | Userr.objects.filter(pass_field=password).exists():
-            user=Userr(session_token=generate_token(session_token))
-        else:
-            return JsonResponse({'error': 'Las contraseñas no coinciden'}, status=400)
-   
+        try:
+            user = Userr.objects.get(nickname=username, pass_field=password)
+            user.session_token = generate_token()
+            user.save()
+            return JsonResponse({'session_token': user.session_token}, status=200)
+        except Userr.DoesNotExist:
+            return JsonResponse({'error': 'La contraseña o el usuario no existen'}, status=400)
     return HttpResponse(status=405)
-def generate_token (generate_token):
-    return "ASDFASDFASDFLASKDF"
+
+def generate_token():
+    return random.SystemRandom().hex(16)
 
 
 #Crear vista de /register
 @csrf_exempt
 def register(request):
     if request.method == 'POST':
-        data = json.loads(request.data)
+        data = json.loads(request.body)
         username = data.get('username')
         email = data.get('email')
         password = data.get('password')
