@@ -3,7 +3,8 @@ from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render, redirect
 from .models import *
-import random
+from django.forms.models import model_to_dict
+import secrets
 # Create your views here.
 
 #Crear vista de /login
@@ -23,7 +24,7 @@ def start_session_view(request):
     return HttpResponse(status=405)
 
 def generate_token():
-    return random.SystemRandom().hex(16)
+    return secrets.token_hex(16)
 
 
 #Crear vista de /register
@@ -60,6 +61,20 @@ def register(request):
         return JsonResponse({'OK': 'El usuario registrado'}, status=200)
 
     return HttpResponse(status=405)
+
+
+
+#Crear vista de /user
+@csrf_exempt
+def user(request, username):
+    if request.method == 'GET':
+        try:
+            user = Userr.objects.get(nickname=username)
+            return JsonResponse(model_to_dict(user))
+        except Userr.DoesNotExist:
+            return HttpResponse(status=404)
+    else:
+        return HttpResponse(status=405)
 
 
 
