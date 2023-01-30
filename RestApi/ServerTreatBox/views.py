@@ -1,10 +1,11 @@
 import json
+import jwt
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render, redirect
 from .models import *
 from django.forms.models import model_to_dict
-import secrets
+
 # Create your views here.
 
 #Crear vista de /login
@@ -24,7 +25,13 @@ def start_session_view(request):
     return HttpResponse(status=405)
 
 def generate_token():
-    return secrets.token_hex(16)
+    payload = {
+        'user_id': user.id,
+        'username': user.username
+    }
+    secret = 'azulafull'
+    token = jwt.encode(payload, secret, algorithm='HS256').decode('utf-8')
+    return token
 
 
 #Crear vista de /register
