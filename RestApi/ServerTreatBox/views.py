@@ -26,8 +26,8 @@ def start_session_view(request):
 
 def generate_token():
     payload = {
-        'user_id': user.id,
-        'username': user.username
+        'user_id': user.id_user,
+        'username': user.nickname
     }
     secret = 'azulafull'
     token = jwt.encode(payload, secret, algorithm='HS256').decode('utf-8')
