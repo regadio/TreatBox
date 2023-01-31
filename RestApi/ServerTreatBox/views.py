@@ -83,21 +83,47 @@ def user(request, username):
     else:
         return HttpResponse(status=405)
 
+#Crear vista de GET /films{id}
+@csrf_exempt
+def film_saved_view(request, id_solicitado):
+    if request.method == 'GET':
+        try:
+            pelicula = MovieUser.objects.get(id = id_solicitado)
+            return JsonResponse(model_to_dict(pelicula))
+        except MovieUser.DoesNotExist:
+            return HttpResponse(status=404) #si no encuentra la película
+    else:
+        return HttpResponse(status=405) #si no funciona la petición get
+
+
+
+#Crear vista de GET /series{id}
+@csrf_exempt
+def series_saved_view(request, id_solicitado):
+    if request.method == 'GET':
+        try:
+            serie = SerieUser.objects.get(id = id_solicitado)
+            return JsonResponse(model_to_dict(serie))
+        except SerieUser.DoesNotExist:
+            return HttpResponse(status=404) #si no encuentra la serie
+    else:
+        return HttpResponse(status=405) #si no funciona la petición get
+
+
+#Crear vista de GET /videojuegos{id}
+@csrf_exempt
+def games_saved_view(request, id_solicitado):
+    if request.method == 'GET':
+        try:
+            game = GameUser.objects.get(id = id_solicitado)
+            return JsonResponse(model_to_dict(game))
+        except GameUser.DoesNotExist:
+            return HttpResponse(status=404) #si no encuentra la película
+    else:
+        return HttpResponse(status=405) #si no funciona la petición get
 
 
 #Crear vista de Put /films/{id}/favorites
-def film_detail_view(request, id_solicitado):
-    if request.method == 'GET':
-        pelicula = MovieUser.objects.get(id = id_solicitado)
-        resultado = {
-            'id_movie': MovieUser.id_movie,
-            'movie_state': MovieUser.movie_state,
-            'times_view': MovieUser.times_view,
-            'notes': MovieUser.notes,
-            'final_date': MovieUser.final_date,
-            'comment': MovieUser.comment   
-        }
-        return JsonResponse(resultado, json_dumps_params={'ensure_ascii':False})
     
 #Crear vista de Put /games/{id}/favorites
 
