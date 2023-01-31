@@ -124,6 +124,21 @@ def games_saved_view(request, id_solicitado):
 
 
 #Crear vista de Put /films/{id}/favorites
+def movie_insert_view(request, id_solicitado):
+    if request.method == 'PUT':
+        data = json.loads(request.body)
+        movie_state = data.get('movie_state')
+        notes = data.get('notes')
+        times_view = data.get('times_view')
+        final_date = data.get('final_date')
+        comment = data.get('comment')
+        try:
+            movie = MovieUser.objects.get(id = id_solicitado, movie_state=movie_state,notes=notes, times_view=times_view, final_date=final_date, comment=comment)
+            movie.save()
+        except MovieUser.DoesNotExist:
+            return HttpResponse(status=404) #si no encuentra la película
+    else:
+        return HttpResponse(status=405) #si no funciona la petición
     
 #Crear vista de Put /games/{id}/favorites
 
