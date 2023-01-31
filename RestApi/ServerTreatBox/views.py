@@ -140,7 +140,7 @@ def movie_insert_view(request, id_solicitado):
     else:
         return HttpResponse(status=405) #si no funciona la petición
     
-#Crear vista de Put /games/{id}/favorites
+#Crear vista de Put /series/{id}/favorites
 def series_insert_view(request, id_solicitado):
     if request.method == 'PUT':
         data = json.loads(request.body)
@@ -152,13 +152,27 @@ def series_insert_view(request, id_solicitado):
             serie = SerieUser.objects.get(id = id_solicitado,serie_state=serie_state, year_release=year_release, notes=notes,comment=comment)
             serie.save()
         except SerieUser.DoesNotExist:
-            return HttpResponse(status=404) #si no encuentra la película
+            return HttpResponse(status=404) #si no encuentra la serie
     else:
         return HttpResponse(status=405) #si no funciona la petición
 
 
-#Crear vista de Put /series/{id}/favorites
-
+#Crear vista de Put /games/{id}/favorites
+def games_insert_view(request, id_solicitado):
+    if request.method == 'PUT':
+        data = json.loads(request.body)
+        game_state = data.get('game_state')
+        notes = data.get('notes')
+        times_pass = data.get('times_pass')
+        final_date = data.get('final_date')
+        comment = data.get('comment')
+        try:
+            game = GameUser.objects.get(id = id_solicitado,game_state=game_state,times_pass=times_pass,final_date=final_date, notes=notes,comment=comment)
+            game.save()
+        except GameUser.DoesNotExist:
+            return HttpResponse(status=404) #si no encuentra el juego
+    else:
+        return HttpResponse(status=405) #si no funciona la petición
 
 
 #Crear una vista de GET /users/{nick}
