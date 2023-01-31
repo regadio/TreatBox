@@ -98,6 +98,17 @@ def film_saved_view(request, id_solicitado):
 
 
 #Crear vista de GET /series{id}
+@csrf_exempt
+def series_saved_view(request, id_solicitado):
+    if request.method == 'GET':
+        try:
+            serie = SerieUser.objects.get(id = id_solicitado)
+            return JsonResponse(model_to_dict(serie))
+        except Userr.DoesNotExist:
+            return HttpResponse(status=404) #si no encuentra la serie
+    else:
+        return HttpResponse(status=405) #si no funciona la petición get
+
 
 #Crear vista de GET /videojuegos{id}
 
