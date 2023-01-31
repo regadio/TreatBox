@@ -90,7 +90,7 @@ def film_saved_view(request, id_solicitado):
         try:
             pelicula = MovieUser.objects.get(id = id_solicitado)
             return JsonResponse(model_to_dict(pelicula))
-        except Userr.DoesNotExist:
+        except MovieUser.DoesNotExist:
             return HttpResponse(status=404) #si no encuentra la película
     else:
         return HttpResponse(status=405) #si no funciona la petición get
@@ -104,14 +104,23 @@ def series_saved_view(request, id_solicitado):
         try:
             serie = SerieUser.objects.get(id = id_solicitado)
             return JsonResponse(model_to_dict(serie))
-        except Userr.DoesNotExist:
+        except SerieUser.DoesNotExist:
             return HttpResponse(status=404) #si no encuentra la serie
     else:
         return HttpResponse(status=405) #si no funciona la petición get
 
 
 #Crear vista de GET /videojuegos{id}
-
+@csrf_exempt
+def games_saved_view(request, id_solicitado):
+    if request.method == 'GET':
+        try:
+            game = GameUser.objects.get(id = id_solicitado)
+            return JsonResponse(model_to_dict(game))
+        except GameUser.DoesNotExist:
+            return HttpResponse(status=404) #si no encuentra la película
+    else:
+        return HttpResponse(status=405) #si no funciona la petición get
 
 
 #Crear vista de Put /films/{id}/favorites
