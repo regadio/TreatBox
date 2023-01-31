@@ -85,7 +85,7 @@ def user(request, username):
 
 
 
-#Crear vista de /films
+#Crear vista de Put /films/{id}/favorites
 def film_detail_view(request, id_solicitado):
     if request.method == 'GET':
         pelicula = MovieUser.objects.get(id = id_solicitado)
@@ -99,4 +99,18 @@ def film_detail_view(request, id_solicitado):
         }
         return JsonResponse(resultado, json_dumps_params={'ensure_ascii':False})
     
+#Crear vista de Put /games/{id}/favorites
+
+
+
+#Crear vista de Put /series/{id}/favorites
+
+
+
+#Crear una vista de GET /users/{nick}
+
+
+
+#Crear una vista de un PUT /profile para cambiar nick y/o descripción y/o imgPerfil y/o banner
+
 
