@@ -141,7 +141,20 @@ def movie_insert_view(request, id_solicitado):
         return HttpResponse(status=405) #si no funciona la petición
     
 #Crear vista de Put /games/{id}/favorites
-
+def series_insert_view(request, id_solicitado):
+    if request.method == 'PUT':
+        data = json.loads(request.body)
+        serie_state = data.get('serie_state')
+        year_release = data.get('year_release')
+        notes = data.get('notes')
+        comment = data.get('comment')
+        try:
+            serie = SerieUser.objects.get(id = id_solicitado,serie_state=serie_state, year_release=year_release, notes=notes,comment=comment)
+            serie.save()
+        except SerieUser.DoesNotExist:
+            return HttpResponse(status=404) #si no encuentra la película
+    else:
+        return HttpResponse(status=405) #si no funciona la petición
 
 
 #Crear vista de Put /series/{id}/favorites
