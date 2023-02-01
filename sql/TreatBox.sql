@@ -79,6 +79,9 @@ create table game_gender (
   FOREIGN KEY (id_game) REFERENCES game(id_game),
   FOREIGN KEY (id_gender) REFERENCES gender(id_gender)
 );
+
+
+
 #Relación N:M entre game y user
 create table game_user (
   id_game_user int auto_increment primary key,
@@ -92,6 +95,8 @@ create table game_user (
   FOREIGN KEY (id_game) REFERENCES game(id_game),
   FOREIGN KEY (id_user) REFERENCES userr(id_user)
 );
+
+
 #Relación N:M entre serie y user
 create table serie_user (
   id_serie_user int auto_increment primary key,
@@ -109,6 +114,8 @@ create table serie_user (
   FOREIGN KEY (id_serie) REFERENCES serie(id_serie),
   FOREIGN KEY (id_user) REFERENCES userr(id_user)
 );
+
+
 #Relación N:M entre movie y user
 create table movie_user (
   id_movie_user int auto_increment primary key,

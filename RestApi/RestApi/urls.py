@@ -27,9 +27,9 @@ urlpatterns = [
     path('peliculas/<int:id_solicitado>', views.film_saved_view, name='film_saved_view'),
     path('series/<int:id_solicitado>', views.series_saved_view, name='series_saved_view'),
     path('juegos/<int:id_solicitado>', views.games_saved_view, name='games_saved_view'),
-    path('juegos/<int:id_juegos>/favoritos', views.games_insert_view, name='games_insert_view'),
-    path('series/<int:id_series>/favoritos', views.series_insert_view, name='series_insert_view'),
-    path('peliculas/<int:id_peliculas>/favoritos', views.movie_insert_view, name='movie_insert_view'),
+    path('juegos/<int:id_juegos>/<int:id_usuario>/favoritos', views.games_insert_view, name='games_insert_view'),
+    path('series/<int:id_series>/<int:id_usuario>/favoritos', views.series_insert_view, name='series_insert_view'),
+    path('peliculas/<int:id_peliculas>/<int:id_usuario>/favoritos', views.movie_insert_view, name='movie_insert_view'),
 
 
 

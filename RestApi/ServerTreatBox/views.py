@@ -124,7 +124,7 @@ def games_saved_view(request, id_solicitado):
 
 
 #Crear vista de Put /films/{id}/favorites
-def movie_insert_view(request, id_peliculas):
+def movie_insert_view(request, id_peliculas, id_usuario):
     if request.method == 'PUT':
         data = json.loads(request.body)
         movie_state = data.get('movie_state')
@@ -133,7 +133,7 @@ def movie_insert_view(request, id_peliculas):
         final_date = data.get('final_date')
         comment = data.get('comment')
         try:
-            movie = MovieUser.objects.get(id = id_peliculas, movie_state=movie_state,notes=notes, times_view=times_view, final_date=final_date, comment=comment)
+            movie = MovieUser.objects.get(id = id_peliculas,id_user=id_usuario, movie_state=movie_state,notes=notes, times_view=times_view, final_date=final_date, comment=comment)
             movie.save()
         except MovieUser.DoesNotExist:
             return HttpResponse(status=404)
@@ -141,7 +141,7 @@ def movie_insert_view(request, id_peliculas):
         return HttpResponse(status=405) #si no funciona la petición
     
 #Crear vista de Put /series/{id}/favorites
-def series_insert_view(request, id_series):
+def series_insert_view(request, id_series, id_usuario):
     if request.method == 'PUT':
         data = json.loads(request.body)
         serie_state = data.get('serie_state')
@@ -149,7 +149,7 @@ def series_insert_view(request, id_series):
         notes = data.get('notes')
         comment = data.get('comment')
         try:
-            serie = SerieUser.objects.get(id = id_series,serie_state=serie_state, year_release=year_release, notes=notes,comment=comment)
+            serie = SerieUser.objects.get(id = id_series,id_user=id_usuario,serie_state=serie_state, year_release=year_release, notes=notes,comment=comment)
             serie.save()
         except SerieUser.DoesNotExist:
             return HttpResponse(status=404) 
@@ -158,7 +158,7 @@ def series_insert_view(request, id_series):
 
 
 #Crear vista de Put /games/{id}/favorites
-def games_insert_view(request, id_juegos):
+def games_insert_view(request, id_juegos, id_usuario):
     if request.method == 'PUT':
         data = json.loads(request.body)
         game_state = data.get('game_state')
@@ -167,7 +167,7 @@ def games_insert_view(request, id_juegos):
         final_date = data.get('final_date')
         comment = data.get('comment')
         try:
-            game = GameUser.objects.get(id = id_juegos,game_state=game_state,times_pass=times_pass,final_date=final_date, notes=notes,comment=comment)
+            game = GameUser.objects.get(id = id_juegos,id_user=id_usuario,game_state=game_state,times_pass=times_pass,final_date=final_date, notes=notes,comment=comment)
             game.save()
         except GameUser.DoesNotExist:
             return HttpResponse(status=404)
