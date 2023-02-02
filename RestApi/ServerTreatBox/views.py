@@ -17,14 +17,14 @@ def start_session_view(request):
         password = data.get('password')
         try:
             user = Userr.objects.get(nickname=username, pass_field=password)
-            user.session_token = generate_token()
+            user.session_token = generate_token(user)
             user.save()
             return JsonResponse({'session_token': user.session_token}, status=200)
         except Userr.DoesNotExist:
             return JsonResponse({'error': 'La contraseña o el usuario no existen'}, status=400)
     return HttpResponse(status=405)
 
-def generate_token():
+def generate_token(user):
     payload = {
         'user_id': user.id_user,
         'username': user.nickname
