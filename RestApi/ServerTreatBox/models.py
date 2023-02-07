@@ -200,7 +200,7 @@ class MovieGender(models.Model):
 
 class MovieUser(models.Model):
     id_movie_user = models.AutoField(primary_key=True)
-    id_movie = models.ForeignKey(Movie, models.DO_NOTHING, db_column='id_movie')
+    id_movie = models.IntegerField(blank=True, null=True)
     id_user = models.ForeignKey('Userr', models.DO_NOTHING, db_column='id_user')
     movie_state = models.CharField(max_length=30, blank=True, null=True)
     notes = models.DecimalField(max_digits=3, decimal_places=1, blank=True, null=True)
