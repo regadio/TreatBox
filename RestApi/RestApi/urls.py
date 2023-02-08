@@ -28,10 +28,4 @@ urlpatterns = [
     path('total/<str:username>/', views.total_saved_view, name='total_saved_view'),
     path('peliculas/favoritos/<int:id_pelicula>/', views.movie_insert_view, name='movie_insert_view'),
     path('series/favoritos/<int:id_serie>/', views.serie_insert_view, name='movie_insert_view'),
-
-
-
-
-
-
 ]

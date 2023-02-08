@@ -57,7 +57,7 @@ class Userr(models.Model):
     id_user = models.AutoField(primary_key=True)
     nickname = models.CharField(max_length=100, blank=True, null=True)
     email = models.CharField(max_length=100, blank=True, null=True)
-    pass_field = models.CharField(db_column='pass', max_length=20, blank=True, null=True)  # Field renamed because it was a Python reserved word.
+    pass_field = models.CharField(db_column='pass', max_length=2000, blank=True, null=True)  # Field renamed because it was a Python reserved word.
     session_token = models.CharField(max_length=1000, blank=True, null=True)
     descriptionn = models.CharField(max_length=1000, blank=True, null=True)
     imagen = models.TextField(blank=True, null=True)

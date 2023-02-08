@@ -1,6 +1,7 @@
 import json
 import jwt
 import logging
+import hashlib
 from django.db.models import Avg
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -9,33 +10,8 @@ from .models import *
 from django.forms.models import model_to_dict
 
 # Create your views here.
-#Vista que inicia sesion del usuariop y devuelve un token
-@csrf_exempt
-def start_session_view(request):
-    if request.method == 'POST':
-        data = json.loads(request.body)
-        username = data.get('username')
-        password = data.get('password')
-        try:
-            user = Userr.objects.get(nickname=username, pass_field=password)
-            user.session_token = generate_token(user)
-            user.save()
-            return JsonResponse({'session_token': user.session_token}, status=200)
-        except Userr.DoesNotExist:
-            return JsonResponse({'error': 'La contraseña o el usuario no existen'}, status=400)
-    return HttpResponse(status=405)
-
-def generate_token(user):
-    payload = {
-        'user_id': user.id_user,
-        'username': user.nickname
-    }
-    secret = 'secreto'
-    token = jwt.encode(payload, secret, algorithm='HS256')
-    # token = token.decode('utf-8')
-    return token
-
-
+def hash_password(password):
+    return hashlib.sha256(password.encode()).hexdigest()
 #Vista que registra al usuario
 @csrf_exempt
 def register(request):
@@ -57,14 +33,45 @@ def register(request):
         # Validar que el usuario no exista
         if Userr.objects.filter(nickname=username).exists():
             return JsonResponse({'error': 'El usuario ya existe'}, status=409)
-
         # Crear el usuario
-        user = Userr(nickname=username, email=email, pass_field=password)
+        hashed_password = hash_password(password)
+        user = Userr(nickname=username, email=email, pass_field=hashed_password)
         user.save()
 
         return JsonResponse({'OK': 'El usuario registrado'}, status=200)
 
     return HttpResponse(status=405)
+
+#Vista que inicia sesion del usuariop y devuelve un token
+@csrf_exempt
+def start_session_view(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        username = data.get('username')
+        password = data.get('password')
+        try:
+            user = Userr.objects.get(nickname=username)
+            if hash_password(password) == user.pass_field:
+                user.session_token = generate_token(user)
+                user.save()
+            user.session_token = generate_token(user)
+            user.save()
+            return JsonResponse({'session_token': user.session_token}, status=200)
+        except Userr.DoesNotExist:
+            return JsonResponse({'error': 'La contraseña o el usuario no existen'}, status=400)
+    return HttpResponse(status=405)
+
+def generate_token(user):
+    payload = {
+        'user_id': user.id_user,
+        'username': user.nickname
+    }
+    secret = 'secreto'
+    token = jwt.encode(payload, secret, algorithm='HS256')
+    # token = token.decode('utf-8')
+    return token
+
+
 
 
 #Vista que devuelve todos los datos de el usuario para cambiar la descripcion del usuario

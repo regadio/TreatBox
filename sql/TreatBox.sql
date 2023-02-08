@@ -8,7 +8,7 @@ create table userr(
 id_user int auto_increment primary key,
 nickname varchar(100),
 email varchar(100),
-pass varchar(20),
+pass varchar(2000),
 session_token varchar(1000),
 descriptionn varchar(1000),
 imagen longblob,
