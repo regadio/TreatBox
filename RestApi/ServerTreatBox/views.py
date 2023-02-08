@@ -93,7 +93,22 @@ def user_data(request, username):
     else:
         return HttpResponse(status=405)
 
-
+@csrf_exempt
+def user_editdata(request, username):
+    if request.method == 'PUT':
+        data = json.loads(request.body)
+        descriptionn = data.get('descriptionn')
+        try:
+            user = Userr.objects.get(nickname=username)
+            user.nickname = username
+            user.descriptionn = descriptionn
+            user.save()
+            return HttpResponse(status=200)
+        except Userr.DoesNotExist:
+            return HttpResponse(status=404)
+    else:
+        return HttpResponse(status=405)
+    
 
 
 #Crear vista de GET /films{id}

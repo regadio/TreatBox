@@ -24,6 +24,7 @@ urlpatterns = [
     path('login/', views.start_session_view, name='login'),
     path('register/', views.register, name='register'),
     path('user/<str:username>/', views.user_data, name='user_data'),
+    path('user/edit/<str:username>/', views.user_editdata, name='user_editdata'),
     path('peliculas/<str:username>/', views.film_view, name='film_saved_view'),
     path('peliculas/<int:id_solicitado>', views.film_saved_view, name='film_saved_view'),
     path('series/<int:id_solicitado>', views.series_saved_view, name='series_saved_view'),
