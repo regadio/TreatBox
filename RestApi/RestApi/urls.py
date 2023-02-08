@@ -23,13 +23,14 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('login/', views.start_session_view, name='login'),
     path('register/', views.register, name='register'),
-    path('user/<str:username>/', views.user, name='user'),
+    path('user/<str:username>/', views.user_data, name='user_data'),
+    path('peliculas/<str:username>/', views.film_view, name='film_saved_view'),
     path('peliculas/<int:id_solicitado>', views.film_saved_view, name='film_saved_view'),
     path('series/<int:id_solicitado>', views.series_saved_view, name='series_saved_view'),
     path('juegos/<int:id_solicitado>', views.games_saved_view, name='games_saved_view'),
-    path('juegos/favoritos', views.games_insert_view, name='games_insert_view'),
-    path('series/favoritos', views.series_insert_view, name='series_insert_view'),
-    path('peliculas/favoritos', views.movie_insert_view, name='movie_insert_view'),
+    path('juegos/favoritos/', views.games_insert_view, name='games_insert_view'),
+    path('series/favoritos/', views.series_insert_view, name='series_insert_view'),
+    path('peliculas/favoritos/', views.movie_insert_view, name='movie_insert_view'),
 
 
 

@@ -33,6 +33,15 @@ def generate_token(user):
     token = jwt.encode(payload, secret, algorithm='HS256').decode('utf-8')
     return token
 
+def decode_token(token):
+    secret = 'azulafull'
+    try:
+        payload = jwt.decode(token, secret, algorithms=['HS256'])
+    # Allow the request
+    except jwt.exceptions.InvalidTokenError:
+    # Invalid token, return 401 error
+        return HttpResponse(status=401)
+
 
 #Crear vista de /register
 @csrf_exempt
@@ -70,18 +79,20 @@ def register(request):
     return HttpResponse(status=405)
 
 
-
 #Crear vista de /user
 @csrf_exempt
-def user(request, username):
+def user_data(request, username):
     if request.method == 'GET':
         try:
-            user = Userr.objects.get(nickname=username)
-            return JsonResponse(model_to_dict(user))
+            user = Userr.objects.filter(nickname=username).values()
+            return JsonResponse(list(user), safe=False)
         except Userr.DoesNotExist:
             return HttpResponse(status=404)
     else:
         return HttpResponse(status=405)
+
+
+
 
 #Crear vista de GET /films{id}
 @csrf_exempt
@@ -124,18 +135,18 @@ def games_saved_view(request, id_solicitado):
 
 
 #Crear vista de Put /films/{id}/favorites
+@csrf_exempt
 def movie_insert_view(request):
     if request.method == 'PUT':
         data = json.loads(request.body)
         id_peliculas =data.get('id_movie')
-        id_usuario =data.get('id_user')
         movie_state = data.get('movie_state')
         notes = data.get('notes')
         times_view = data.get('times_view')
         final_date = data.get('final_date')
         comment = data.get('comment')
         try:
-            movie = MovieUser(id_movie = id_peliculas,id_user=id_usuario, movie_state=movie_state,notes=notes, times_view=times_view, final_date=final_date, comment=comment)
+            movie = MovieUser(id_movie=id_peliculas, id_user=1, movie_state=movie_state, notes=notes, times_view=times_view,final_date=final_date, comment=comment)
             movie.save()
         except MovieUser.DoesNotExist:
             return HttpResponse(status=404)
@@ -143,6 +154,7 @@ def movie_insert_view(request):
         return HttpResponse(status=405) #si no funciona la petición
     
 #Crear vista de Put /series/{id}/favorites
+@csrf_exempt
 def series_insert_view(request):
     if request.method == 'PUT':
         data = json.loads(request.body)
@@ -162,6 +174,7 @@ def series_insert_view(request):
 
 
 #Crear vista de Put /games/{id}/favorites
+@csrf_exempt
 def games_insert_view(request):
     if request.method == 'PUT':
         id_juegos =data.get('id_juego')
@@ -186,5 +199,18 @@ def games_insert_view(request):
 
 
 #Crear una vista de un PUT /profile para cambiar nick y/o descripción y/o imgPerfil y/o banner
+
+
+@csrf_exempt
+def film_view(request, username):
+    if request.method == 'GET':
+        try:
+            user = Userr.objects.get(nickname=username)
+            movies = MovieUser.objects.filter(id_user=user).values_list('id_movie', flat=True)
+            return JsonResponse({'id_movies': list(movies)})        
+        except Userr.DoesNotExist:
+            return HttpResponse(status=404)
+    else:
+        return HttpResponse(status=405)
 
 
