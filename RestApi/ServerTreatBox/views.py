@@ -54,7 +54,6 @@ def start_session_view(request):
             if hash_password(password) == user.pass_field:
                 user.session_token = generate_token(user)
                 user.save()
-            user.session_token = generate_token(user)
             user.save()
             return JsonResponse({'session_token': user.session_token}, status=200)
         except Userr.DoesNotExist:
@@ -91,14 +90,21 @@ def user_editdata(request, username):
     if request.method == 'PUT':
         data = json.loads(request.body)
         descriptionn = data.get('descriptionn')
-        try:
-            user = Userr.objects.get(nickname=username)
-            user.nickname = username
-            user.descriptionn = descriptionn
-            user.save()
-            return HttpResponse(status=200)
-        except Userr.DoesNotExist:
-            return HttpResponse(status=404)
+        session_token = request.headers.get('Authorization')
+        if session_token:
+            try:
+                user = Userr.objects.get(nickname=username)
+                if user.session_token == session_token:
+                    user.nickname = username
+                    user.descriptionn = descriptionn
+                    user.save()
+                    return HttpResponse(status=200)
+                else:
+                    return HttpResponse(status=401) # No autorizado
+            except Userr.DoesNotExist:
+                return HttpResponse(status=404)
+        else:
+            return HttpResponse(status=400) # Falta el token de sesión
     else:
         return HttpResponse(status=405)
     
@@ -133,7 +139,6 @@ logging.basicConfig(level=logging.DEBUG)
 #Vista que inserta y actualiza los datos de la tabla  MovieUser
 @csrf_exempt
 def movie_insert_view(request,id_pelicula):
-    logging.debug("Este es un mensaje de depuración")
     if request.method == 'PUT':
         data = json.loads(request.body)
         movie_state = data.get('movie_state')
@@ -142,25 +147,34 @@ def movie_insert_view(request,id_pelicula):
         final_date = data.get('final_date')
         comment = data.get('comment')
         username = data.get('username')
-        try:
-            user = Userr.objects.get(nickname=username)
-            movie, created = MovieUser.objects.get_or_create(id_movie=id_pelicula, id_user=user)
-            movie.movie_state = movie_state
-            movie.notes = notes
-            movie.times_view = times_view
-            movie.final_date = final_date
-            movie.comment = comment
-            movie.save()
-            return HttpResponse(status=200)
-        except MovieUser.DoesNotExist:
-            return HttpResponse(status=404)
+        session_token = request.headers.get('Authorization')
+        logging.debug("token cliente", session_token)
+
+        if session_token:
+            try:
+                user = Userr.objects.get(nickname=username)
+                logging.debug("token server", user.session_token)
+                if user.session_token == session_token:
+                    movie, created = MovieUser.objects.get_or_create(id_movie=id_pelicula, id_user=user)
+                    movie.movie_state = movie_state
+                    movie.notes = notes
+                    movie.times_view = times_view
+                    movie.final_date = final_date
+                    movie.comment = comment
+                    movie.save()
+                    return HttpResponse(status=200)
+                else:
+                    return HttpResponse(status=401) # No autorizado
+            except MovieUser.DoesNotExist:
+                return HttpResponse(status=404)
+        else:
+            return HttpResponse(status=400)
     else:
         return HttpResponse(status=405) #si no funciona la petición
     
 #Vista que inserta y actualiza los datos de la tabla  SerieUser
 @csrf_exempt
 def serie_insert_view(request,id_serie):
-    logging.debug("Este es un mensaje de depuración")
     if request.method == 'PUT':
         data = json.loads(request.body)
         serie_state = data.get('serie_state')
@@ -169,18 +183,25 @@ def serie_insert_view(request,id_serie):
         final_date = data.get('final_date')
         comment = data.get('comment')
         username = data.get('username')
-        try:
-            user = Userr.objects.get(nickname=username)
-            serie, created = SerieUser.objects.get_or_create(id_serie=id_serie, id_user=user)
-            serie.serie_state = serie_state
-            serie.notes = notes
-            serie.times_view = times_view
-            serie.final_date = final_date
-            serie.comment = comment
-            serie.save()
-            return HttpResponse(status=200)
-        except SerieUser.DoesNotExist:
-            return HttpResponse(status=404)
+        session_token = request.headers.get('Authorization')
+        if session_token:
+            try:
+                user = Userr.objects.get(nickname=username)
+                if user.session_token == session_token:
+                    serie, created = SerieUser.objects.get_or_create(id_serie=id_serie, id_user=user)
+                    serie.serie_state = serie_state
+                    serie.notes = notes
+                    serie.times_view = times_view
+                    serie.final_date = final_date
+                    serie.comment = comment
+                    serie.save()
+                    return HttpResponse(status=200)
+                else:
+                    return HttpResponse(status=401) # No autorizado
+            except SerieUser.DoesNotExist:
+                return HttpResponse(status=404)
+        else:
+            return HttpResponse(status=400)
     else:
         return HttpResponse(status=405) #si no funciona la petición
 
