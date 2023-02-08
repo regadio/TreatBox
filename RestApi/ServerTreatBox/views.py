@@ -1,6 +1,7 @@
 import json
 import jwt
 import logging
+from django.db.models import Avg
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render, redirect
@@ -109,7 +110,10 @@ def total_saved_view(request, username):
             user = Userr.objects.get(nickname=username)
             total_pelis = MovieUser.objects.filter(id_user=user.id_user).count()
             total_series = SerieUser.objects.filter(id_user=user.id_user).count()
-            return JsonResponse({'total_pelis': total_pelis})
+            avg_pelis = MovieUser.objects.filter(id_user=user.id_user).aggregate(Avg('notes'))
+            avg_series = SerieUser.objects.filter(id_user=user.id_user).aggregate(Avg('notes'))
+
+            return JsonResponse({'total_pelis': total_pelis,'total_series': total_series,'avg_pelis': avg_pelis['notes__avg'],'avg_series': avg_series['notes__avg']})
         except Userr.DoesNotExist:
             return HttpResponse(status=404) #si no encuentra el usuario
         except MovieUser.DoesNotExist:
