@@ -1,5 +1,6 @@
 import json
 import jwt
+import logging
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render, redirect
@@ -29,18 +30,19 @@ def generate_token(user):
         'user_id': user.id_user,
         'username': user.nickname
     }
-    secret = 'azulafull'
-    token = jwt.encode(payload, secret, algorithm='HS256').decode('utf-8')
+    secret = 'secreto'
+    token = jwt.encode(payload, secret, algorithm='HS256')
     return token
 
-def decode_token(token):
-    secret = 'azulafull'
-    try:
-        payload = jwt.decode(token, secret, algorithms=['HS256'])
-    # Allow the request
-    except jwt.exceptions.InvalidTokenError:
-    # Invalid token, return 401 error
-        return HttpResponse(status=401)
+
+# def decode_token(token):
+#     secret = 'azulafull'
+#     try:
+#         payload = jwt.decode(token, secret, algorithms=['HS256'])
+#     # Allow the request
+#     except jwt.exceptions.InvalidTokenError:
+#     # Invalid token, return 401 error
+#         return HttpResponse(status=401)
 
 
 #Crear vista de /register
@@ -133,21 +135,23 @@ def games_saved_view(request, id_solicitado):
     else:
         return HttpResponse(status=405) #si no funciona la petición get
 
-
-#Crear vista de Put /films/{id}/favorites
+logging.basicConfig(level=logging.DEBUG)
+#Crear vista de Put /films/favorites
 @csrf_exempt
-def movie_insert_view(request):
+def movie_insert_view(request,id_pelicula):
+    logging.debug("Este es un mensaje de depuración")
     if request.method == 'PUT':
         data = json.loads(request.body)
-        id_peliculas =data.get('id_movie')
         movie_state = data.get('movie_state')
         notes = data.get('notes')
         times_view = data.get('times_view')
         final_date = data.get('final_date')
         comment = data.get('comment')
         try:
-            movie = MovieUser(id_movie=id_peliculas, id_user=1, movie_state=movie_state, notes=notes, times_view=times_view,final_date=final_date, comment=comment)
+            user = Userr.objects.get(id_user=1)
+            movie = MovieUser(id_movie=id_pelicula, id_user=user, movie_state=movie_state, notes=notes, times_view=times_view,final_date=final_date, comment=comment)
             movie.save()
+            return HttpResponse(status=200)
         except MovieUser.DoesNotExist:
             return HttpResponse(status=404)
     else:

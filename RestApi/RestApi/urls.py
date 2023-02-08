@@ -30,7 +30,7 @@ urlpatterns = [
     path('juegos/<int:id_solicitado>', views.games_saved_view, name='games_saved_view'),
     path('juegos/favoritos/', views.games_insert_view, name='games_insert_view'),
     path('series/favoritos/', views.series_insert_view, name='series_insert_view'),
-    path('peliculas/favoritos/', views.movie_insert_view, name='movie_insert_view'),
+    path('peliculas/favoritos/<int:id_pelicula>/', views.movie_insert_view, name='movie_insert_view'),
 
 
 
