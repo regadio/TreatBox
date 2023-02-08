@@ -35,13 +35,9 @@ create table serie_user (
   id_serie int not null,
   id_user int not null,
   serie_state varchar(30),
-  director varchar(40),
-  year_release date,
-  duration varchar(100),
-  season varchar(50),
   notes decimal(3,1),
-  tittle varchar(50),
-  image longblob,
+  times_view int,
+  final_date datetime,
   comment varchar(2000),
   FOREIGN KEY (id_user) REFERENCES userr(id_user)
 );

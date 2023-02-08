@@ -43,13 +43,9 @@ class SerieUser(models.Model):
     id_serie = models.IntegerField()
     id_user = models.ForeignKey('Userr', models.DO_NOTHING, db_column='id_user')
     serie_state = models.CharField(max_length=30, blank=True, null=True)
-    director = models.CharField(max_length=40, blank=True, null=True)
-    year_release = models.DateField(blank=True, null=True)
-    duration = models.CharField(max_length=100, blank=True, null=True)
-    season = models.CharField(max_length=50, blank=True, null=True)
     notes = models.DecimalField(max_digits=3, decimal_places=1, blank=True, null=True)
-    tittle = models.CharField(max_length=50, blank=True, null=True)
-    image = models.TextField(blank=True, null=True)
+    times_view = models.IntegerField(blank=True, null=True)
+    final_date = models.DateTimeField(blank=True, null=True)
     comment = models.CharField(max_length=2000, blank=True, null=True)
 
     class Meta:

@@ -9,8 +9,7 @@ from .models import *
 from django.forms.models import model_to_dict
 
 # Create your views here.
-
-#Crear vista de /login
+#Vista que inicia sesion del usuariop y devuelve un token
 @csrf_exempt
 def start_session_view(request):
     if request.method == 'POST':
@@ -33,10 +32,11 @@ def generate_token(user):
     }
     secret = 'secreto'
     token = jwt.encode(payload, secret, algorithm='HS256')
+    # token = token.decode('utf-8')
     return token
 
 
-#Crear vista de /register
+#Vista que registra al usuario
 @csrf_exempt
 def register(request):
     if request.method == 'POST':
@@ -62,17 +62,12 @@ def register(request):
         user = Userr(nickname=username, email=email, pass_field=password)
         user.save()
 
-        # Crear y devolver el token de sesion
-        # session_token = create_session_token(user)
-        # user.session_token = session_token
-        # user.save()
-        # return JsonResponse({'sessionToken': session_token}, status=201)
         return JsonResponse({'OK': 'El usuario registrado'}, status=200)
 
     return HttpResponse(status=405)
 
 
-#Crear vista de /user
+#Vista que devuelve todos los datos de el usuario para cambiar la descripcion del usuario
 @csrf_exempt
 def user_data(request, username):
     if request.method == 'GET':
@@ -83,7 +78,7 @@ def user_data(request, username):
             return HttpResponse(status=404)
     else:
         return HttpResponse(status=405)
-
+#Vista que sirve para cambiar la descripcion del usuario
 @csrf_exempt
 def user_editdata(request, username):
     if request.method == 'PUT':
@@ -102,7 +97,7 @@ def user_editdata(request, username):
     
 
 
-#Crear vista de GET de peliculas totales de un usuario
+#Vista que devuelve el total de peliculas y series almacenadas por el usuario y la media de sus puntuaciones
 @csrf_exempt
 def total_saved_view(request, username):
     if request.method == 'GET':
@@ -128,7 +123,7 @@ def total_saved_view(request, username):
 
 logging.basicConfig(level=logging.DEBUG)
 
-#Crear vista de Put /films/favorites
+#Vista que inserta y actualiza los datos de la tabla  MovieUser
 @csrf_exempt
 def movie_insert_view(request,id_pelicula):
     logging.debug("Este es un mensaje de depuración")
@@ -155,24 +150,31 @@ def movie_insert_view(request,id_pelicula):
     else:
         return HttpResponse(status=405) #si no funciona la petición
     
-#Crear vista de Put /series/{id}/favorites
+#Vista que inserta y actualiza los datos de la tabla  SerieUser
 @csrf_exempt
-def series_insert_view(request):
+def serie_insert_view(request,id_serie):
+    logging.debug("Este es un mensaje de depuración")
     if request.method == 'PUT':
         data = json.loads(request.body)
-        id_series =data.get('id_serie')
-        id_usuario =data.get('id_user')
         serie_state = data.get('serie_state')
-        year_release = data.get('year_release')
         notes = data.get('notes')
+        times_view = data.get('times_view')
+        final_date = data.get('final_date')
         comment = data.get('comment')
+        username = data.get('username')
         try:
-            serie = SerieUser(id_series = id_series,id_user=id_usuario,serie_state=serie_state, year_release=year_release, notes=notes,comment=comment)
+            user = Userr.objects.get(nickname=username)
+            serie, created = SerieUser.objects.get_or_create(id_serie=id_serie, id_user=user)
+            serie.serie_state = serie_state
+            serie.notes = notes
+            serie.times_view = times_view
+            serie.final_date = final_date
+            serie.comment = comment
             serie.save()
+            return HttpResponse(status=200)
         except SerieUser.DoesNotExist:
-            return HttpResponse(status=404) 
+            return HttpResponse(status=404)
     else:
         return HttpResponse(status=405) #si no funciona la petición
-
 
 
